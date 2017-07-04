@@ -1,14 +1,24 @@
 template: Hello, %s!
 defaultName: Stranger
 
-#logging:
-#  level: INFO
-#  appenders:
-#    - type: file
-#      currentLogFilename: /var/log/myapplication.log
-#      threshold: ALL
-#      archive: true
-#      archivedLogFilenamePattern: /var/log/myapplication-%d.log
-#      archivedFileCount: 5
-#      timeZone: UTC
-#      logFormat: "%-5level [%date{ISO8601}] [%X{MDC_VAR}] [%thread]: %c:%line- %msg%n"
+server:
+#  softNofileLimit: 1000
+#  hardNofileLimit: 1000
+  applicationConnectors:
+    - type: http
+      port: 8080
+  adminConnectors:
+    - type: http
+      port: 8081
+  registerDefaultExceptionMappers: false
+
+# Logging settings.
+logging:
+  level: INFO
+  loggers:
+    com.github: DEBUG
+  appenders:
+    - type: console
+      threshold: ALL
+      timeZone: UTC
+      logFormat: "%-5level [%date{ISO8601}] [%thread]: %c - %msg%n"

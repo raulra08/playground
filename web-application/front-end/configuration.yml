@@ -1,0 +1,14 @@
+template: Hello, %s!
+defaultName: Stranger
+
+#logging:
+#  level: INFO
+#  appenders:
+#    - type: file
+#      currentLogFilename: /var/log/myapplication.log
+#      threshold: ALL
+#      archive: true
+#      archivedLogFilenamePattern: /var/log/myapplication-%d.log
+#      archivedFileCount: 5
+#      timeZone: UTC
+#      logFormat: "%-5level [%date{ISO8601}] [%X{MDC_VAR}] [%thread]: %c:%line- %msg%n"

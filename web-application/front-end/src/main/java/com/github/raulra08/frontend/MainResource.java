@@ -1,25 +1,24 @@
 package com.github.raulra08.frontend;
 
-import java.util.concurrent.atomic.AtomicLong;
+import com.codahale.metrics.annotation.Timed;
+import com.google.common.base.Optional;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
-
-import com.codahale.metrics.annotation.Timed;
-import com.google.common.base.Optional;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Path("/hello-world")
 @Produces(MediaType.APPLICATION_JSON)
-public class HelloWorldResource {
+public class MainResource {
 
     private final String template;
     private final String defaultName;
     private final AtomicLong counter;
 
-    public HelloWorldResource(String template, String defaultName) {
+    public MainResource(String template, String defaultName) {
         this.template = template;
         this.defaultName = defaultName;
         this.counter = new AtomicLong();

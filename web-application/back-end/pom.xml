@@ -84,7 +84,7 @@
                                         implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
                                 <transformer
                                         implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>com.github.raulra08.frontend.HelloWorldApplication</mainClass>
+                                    <mainClass>com.github.raulra08.frontend.FrontEndApplication</mainClass>
                                 </transformer>
                             </transformers>
                         </configuration>

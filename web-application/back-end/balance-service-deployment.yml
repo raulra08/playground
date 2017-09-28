@@ -1,0 +1,30 @@
+# hello-world-deployment.yml
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: balance-service
+spec:
+ replicas: 2
+ template:
+   metadata:
+     labels:
+       app: web
+   spec:
+     containers:
+     - name: balance-service
+       image: raulzuk/balance-service:v1
+       ports:
+       - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: balance-service
+  labels:
+    app: web
+spec:
+  type: ClusterIP
+  selector:
+    app: web
+  ports:
+  - port: 8080

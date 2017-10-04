@@ -1,93 +1,104 @@
 
-### Balance Service Kubernetes Deployment
-1) Build the docker image
+![][header-img]
+# Kubernetes Deployment
+
+You'll learn how deploy 2 instances of the same microservice running in a [docker][docker] container and that is deployed by [Kubernetes][kubernetes].
+
+There's a complimentary blog [post][post-url] about this work.
+
+## Build the docker image
 
 ```
 docker build -t raulzuk/balance-service:v1 .
 docker login
 docker push raulzuk/balance-service:v1
 ```
+## Create a Kubernetes cluster
 
-2) Create a Kubernetes cluster
+### Install Kops
 
-When following the readme file create a gossip-based cluster and skip DNS configuration steps
+We start by setting up a a gossip-based Kubernetes cluster on AWS using [KOPS][kops], a command line tool for administering Kubernetes clusters.
+
+### Set up your AWS account
+
+Configure your [AWS account][aws-kops-iam] for kops. Skip the DNS configuration that you might find in the kops repo.
+
+### Cluster State storage
+
+There are [instructions][aws-kops-bucket] on how to store the state of your cluster
 
 ```
 aws s3api create-bucket --bucket balance-service-com-state-store --create-bucket-configuration LocationConstraint=eu-west-1
 aws s3api put-bucket-versioning --bucket balance-service-com-state-store --versioning-configuration Status=Enabled
 ```
+
+In order set up a gossip-based cluster suffix it's name with `.k8s.local`
+
+### Create the cluster
+
 ```
 export NAME=balance-service.k8s.local
 export KOPS_STATE_STORE=s3://balance-service-com-state-store
 ```
 
-2.1 Create the cluster
+There are [instructions][aws-kops-cluster] for creating a cluster in AWS (one difference is that we deployed into the eu-west-1 region). But here's how we did it.
 
 ```
 kops create cluster --zones eu-west-1a $NAME
 ```
 
-2.2 Build the cluster
+### Build the cluster
+
 ```
 kops update cluster $NAME --yes
 ```
 
-2.3 You should see your instances being built in the EC2 Dashboard. Once they are ready you can validate the cluster build.
+You should see your instances being built in the EC2 Dashboard. Once they are ready you can validate the cluster build.
+
+At this point you should be able to see the kubernetes master and 2 nodes intances running in AWS. Wait for them to be ready before getting a successful response from the command below
+
 ```
 kops validate cluster $NAME
 ```
 
-3) Deploy the balance-service pod in a Kube node.
+## Deploy the balance-service pod in a Kube node.
 
 ```
 kubectl create -f balance-service-deployment.yml
 ```
 
-I have included the service inside the yaml file so exposing the deployment is not needed anynmore.
+## Deploy the kong pod (with postgres )
 
-4) Deploy the kong pod (with postgres ) to protect our API - https://github.com/Mashape/kong-dist-kubernetes
-Since we are deploying in AWS and we already have a Kubernetes cluster then skip all steps to step 3.
+To protect our API we will use [kong][kong] API gateway. Luckyly kong has prepared a kong pod and steps to deploy their API gateway in a kube pod; there are steps to [install][kong-kubernetes] kong in AWS since we already have a Kubernetes cluster then skip all steps to step 3. We have all the files mentioned in the kong deployment steps.
 
+```
+kubectl create -f postgres.yaml
+kubectl create -f kong_migration_postgres.yaml
+kubectl create -f kong_postgres.yaml
+```
 
-5) Configure Kong
+## Configure the API Gateway
 
 ```
 $ curl -X POST --url http://a07358027a46011e7a5310678c5677ce-1334815499.eu-west-1.elb.amazonaws.com:8001/apis/ --data 'name=balance-service' --data 'methods=GET' --data 'upstream_url=http://balance-service:8080'
-{"created_at":1506612250000,"strip_uri":true,"id":"47a13b23-2ea3-4828-ab85-eaa5ba5ccf7a","name":"balance-service","http_if_terminated":false,"preserve_host":false,"upstream_url":"http:\/\/balance-service:8080","methods":["GET"],"upstream_send_timeout":60000,"upstream_connect_timeout":60000,"upstream_read_timeout":60000,"retries":5,"https_only":false}
 ```
 
 ```
 $ curl -X POST --url http://a07358027a46011e7a5310678c5677ce-1334815499.eu-west-1.elb.amazonaws.com:8001/apis/balance-service/plugins --data 'name=rate-limiting' --data 'config.second=100'
-{"created_at":1506621419000,"config":{"second":100,"redis_database":0,"policy":"cluster","hide_client_headers":false,"redis_timeout":2000,"redis_port":6379,"limit_by":"consumer","fault_tolerant":true},"id":"4d5babd7-bec2-4241-92c3-002aea2fe78d","name":"rate-limiting","api_id":"47a13b23-2ea3-4828-ab85-eaa5ba5ccf7a","enabled":true}
 ```
 
-6) Calling the balance service
+## Calling the balance service
 
 ```
-$ curl -v http://a070b2710a46011e7a5310678c5677ce-1338563272.eu-west-1.elb.amazonaws.com:8000/balance | json_pp
-  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                 Dload  Upload   Total   Spent    Left  Speed
-  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0*   Trying 34.251.102.173...
-* TCP_NODELAY set
-* Connected to a070b2710a46011e7a5310678c5677ce-1338563272.eu-west-1.elb.amazonaws.com (34.251.102.173) port 8000 (#0)
-> GET /balance HTTP/1.1
-> Host: a070b2710a46011e7a5310678c5677ce-1338563272.eu-west-1.elb.amazonaws.com:8000
-> User-Agent: curl/7.54.0
-> Accept: */*
->
-< HTTP/1.1 200 OK
-< Content-Type: application/json
-< Content-Length: 30
-< Connection: keep-alive
-< Date: Thu, 28 Sep 2017 17:51:29 GMT
-< Vary: Accept-Encoding
-< X-Kong-Upstream-Latency: 3
-< X-Kong-Proxy-Latency: 1
-< Via: kong/0.11.0
-<
-* Connection #0 to host a070b2710a46011e7a5310678c5677ce-1338563272.eu-west-1.elb.amazonaws.com left intact
-{
-   "currency" : "GBP",
-   "amount" : 98
-}
+$ curl -v http://a070b2710a46011e7a5310678c5677ce-1338563272.eu-west-1.elb.amazonaws.com:8000/balance
 ```
+[post-url]: https://www.zuehlke.com/blog/en/even-your-boss-can-deploy-microservices/
+[aws-kops-iam]: https://github.com/kubernetes/kops/blob/master/docs/aws.md#aws
+[aws-kops-bucket]: https://github.com/kubernetes/kops/blob/master/docs/aws.md#cluster-state-storage
+[aws-kops-cluster]: https://github.com/kubernetes/kops/blob/master/docs/aws.md#creating-your-first-cluster
+[kong]: https://getkong.org/
+[kong-kubernetes]: https://github.com/Mashape/kong-dist-kubernetes
+[kops]: https://github.com/kubernetes/kops
+[kubernetes]: https://kubernetes.io/
+[docker]: https://www.docker.com/
+[header-img]: img/header.png

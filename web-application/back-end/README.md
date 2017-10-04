@@ -55,7 +55,7 @@ kops update cluster $NAME --yes
 
 You should see your instances being built in the EC2 Dashboard. Once they are ready you can validate the cluster build.
 
-At this point you should be able to see the kubernetes master and 2 nodes intances running in AWS. Wait for them to be ready before getting a successful response from the command below
+At this point you should be able to see the kubernetes master and 2 nodes instances running in AWS. Wait for them to be ready before getting a successful response from the command below
 
 ```
 kops validate cluster $NAME
@@ -69,7 +69,7 @@ kubectl create -f balance-service-deployment.yml
 
 ## Deploy the kong pod (with postgres )
 
-To protect our API we will use [kong][kong] API gateway. Luckyly kong has prepared a kong pod and steps to deploy their API gateway in a kube pod; there are steps to [install][kong-kubernetes] kong in AWS since we already have a Kubernetes cluster then skip all steps to step 3. We have all the files mentioned in the kong deployment steps.
+To protect our API we will use [kong][kong] API gateway. Luckily kong has prepared a kong pod and steps to deploy their API gateway in a kube pod; there are steps to [install][kong-kubernetes] kong in AWS since we already have a Kubernetes cluster then skip all steps to step 3. We have all the files mentioned in the kong deployment steps.
 
 ```
 kubectl create -f postgres.yaml

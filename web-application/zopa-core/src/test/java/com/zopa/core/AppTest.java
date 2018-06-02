@@ -2,32 +2,38 @@ package com.zopa.core;
 
 import org.junit.Test;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class AppTest {
 
     @Test
-    public void shouldPrintQuote() {
-        String[] args = null;
-
-        App.main(new String[]{"Market Data for Exercise - csv.csv", "1000.0"});
+    public void shouldReturnTrueWithValidInput() {
+        assertTrue(App.validateInput(1000));
     }
 
     @Test
-    public void shouldComputeCompoundInterest(){
-        App app = new App(new DataReader(""), new RateCalculator());
-
-        Double gains = app.compoundInterest(1000.0, 0.07);
-
-        assertTrue(gains.equals(1108.10));
+    public void shouldReturnTrueWithStepOf100Input() {
+        assertTrue(App.validateInput(1100));
     }
 
     @Test
-    public void shouldQuote(){
-        App app = new App(new DataReader("Market Data for Exercise - csv.csv"), new RateCalculator());
+    public void shouldReturnFalseWithInvalidStep() {
+        assertFalse(App.validateInput(1101));
+    }
 
-        app.quoteLoan();
+    @Test
+    public void shouldReturnFalseWithSmallInput() {
+        assertFalse(App.validateInput(900));
+    }
 
-        assertTrue(true);
+    @Test
+    public void shouldReturnTrueWithMaxInput() {
+        assertTrue(App.validateInput(1500));
+    }
+
+    @Test
+    public void shouldReturnFalseWithBigInput() {
+        assertFalse(App.validateInput(9000));
     }
 }

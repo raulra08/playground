@@ -1,14 +1,17 @@
 package com.zopa.core;
 
-import java.util.ArrayList;
+import com.zopa.core.quotes.DataReader;
+import com.zopa.core.quotes.LoanCalculator;
+import com.zopa.core.quotes.model.Lender;
+
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 public class App {
 
-    private final DataReader dataReader;
-    private final RateCalculator rateCalculator;
+    private static final int MINIMUM = 1000;
+    private static final int MAXIMUM = 1500;
+    private static final int STEP = 100;
 
     public static void main(String[] args) {
 
@@ -18,26 +21,18 @@ public class App {
             return;
         }
 
-        // load dependencies
-        DataReader dataReader = new DataReader(args[0]);
-        RateCalculator rateCalculator = new RateCalculator();
-
-        // initialise application
-        App app = new App(dataReader, rateCalculator);
-
-        // execute
-        app.quoteLoan();
+        Integer loanAmount = Integer.parseInt(args[1]);
+        if (App.validateInput(loanAmount)) {
+            List<Lender> lendersList = DataReader.readData(args[0]);
+            LoanCalculator loanCalculator = new LoanCalculator();
+        }
     }
 
-    public App(DataReader dataReader, RateCalculator rateCalculator) {
-        this.dataReader = dataReader;
-        this.rateCalculator = rateCalculator;
-    }
-
-    public void quoteLoan() {
-        Optional<Map<String, Map<String, Double>>> data = this.dataReader.readData();
-        data;
-        Optional rate = this.rateCalculator.calculateBestRate(data.);
-
+    public static boolean validateInput(Integer loanAmount) {
+        if (loanAmount < MINIMUM)
+            return false;
+        if (loanAmount > MAXIMUM)
+            return false;
+        return (loanAmount % STEP == 0);
     }
 }

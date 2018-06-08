@@ -41,7 +41,7 @@ Hence in order to pay everyone the system will sort all lenders by rate and star
 
 Once the system defines the rate to be used then a quote can be generated using monthly compounding interest.
 
-### Trade Offs
+### Trade-offs
 
 The compound interest formula isn't correct.
 I assumed that a generic formula would serve in the mean time but if I had the chance I would work close to an actuarial or financial adviser to derive the correct formula.

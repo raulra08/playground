@@ -8,6 +8,12 @@ import static org.junit.Assert.assertTrue;
 public class AppTest {
 
     @Test
+    public void shouldPrintQuoteIllustration(){
+        String[] args = {"mockData.csv", "0"};
+        App.main(args);
+    }
+
+    @Test
     public void shouldReturnTrueWithValidAmountValue() {
         assertTrue(App.validAmountValue(1000));
     }
@@ -39,16 +45,16 @@ public class AppTest {
 
     @Test
     public void shouldReturnFalseWhenInputIsValid() {
-        assertFalse(App.invalidInput("fileName", "0"));
+        assertFalse(App.invalidInput(new String[]{"fileName", "0"}));
     }
 
     @Test
     public void shouldReturnTrueWithInvalidFileNameInput() {
-        assertTrue(App.invalidInput("", "0"));
+        assertTrue(App.invalidInput(new String[]{"", "0"}));
     }
 
     @Test
     public void shouldReturnTrueWithInvalidAmountInput() {
-        assertTrue(App.invalidInput("fileName", null));
+        assertTrue(App.invalidInput(new String[]{"fileName", null}));
     }
 }

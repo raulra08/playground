@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 public class LoanCalculatorTest {
 
@@ -24,7 +25,7 @@ public class LoanCalculatorTest {
      public void shouldCalculateLoanWithPrincipalAndLenders() {
         Optional<Loan> maybeLoan = LoanCalculator.calculateLoan(1000.0, lenders);
 
-        Double repaymentAmount = Double.valueOf(1017.8552279577544);
+        Double repaymentAmount = Double.valueOf(1017.3493776093748);
 
         assertEquals(repaymentAmount, maybeLoan.get().getTotalRepayment());
     }

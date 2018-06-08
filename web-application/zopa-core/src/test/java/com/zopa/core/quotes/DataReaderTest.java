@@ -28,5 +28,4 @@ public class DataReaderTest {
         List<Lender> lenders = DataReader.readData("mockDataCorrupted.csv");
         assertTrue(lenders.isEmpty());
     }
-
 }

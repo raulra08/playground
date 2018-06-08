@@ -1,6 +1,8 @@
 package com.zopa.core;
 
-import com.zopa.core.quotes.QuoteService;
+import com.zopa.core.quotes.QuoteIllustrator;
+
+import static java.lang.String.format;
 
 public class App {
 
@@ -9,22 +11,25 @@ public class App {
     private static final int STEP = 100;
 
     public static void main(String[] args) {
-        String illustration = "";
-        if (args == null || args.length != 2 || invalidInput(args[0], args[1])) {
-            illustration = "Expected input: <market_data_file> <loan_amount>";
+
+        String illustration;
+
+        if (invalidInput(args) || !validAmountValue(Integer.parseInt(args[1]))) {
+            illustration = getRunErrorMessage();
         } else {
-            if (validAmountValue(Integer.parseInt(args[1]))) {
-                illustration = QuoteService.illustrateQuote(args[0], Double.valueOf(args[1]));
-            }
+            illustration = QuoteIllustrator.illustrateQuote(args[0], Double.valueOf(args[1]));
         }
+
         System.out.print(illustration);
     }
 
-    public static boolean invalidInput(String fileName, String loanAmount) {
-        if (fileName == null || fileName == "") {
-            return true;
-        }
-        if (loanAmount == null || loanAmount == "") {
+    public static boolean invalidInput(String[] args) {
+        if( args == null
+                || args.length != 2
+                || args[0] == null
+                || args[0] == ""
+                || args[1] == null
+                || args[1] == "") {
             return true;
         }
         return false;
@@ -36,5 +41,10 @@ public class App {
         if (loanAmount > MAXIMUM)
             return false;
         return (loanAmount % STEP == 0);
+    }
+
+    private static String getRunErrorMessage() {
+        return format("Expected input: <market_data_file> <loan_amount>\n" +
+                "verify <loan_amount> is withing £1000 and £1500\n");
     }
 }

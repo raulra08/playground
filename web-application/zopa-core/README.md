@@ -27,10 +27,12 @@ mvn test
 
 ### Run
 
-To execute the application in the form of a command line tool, run:
+To run the application in the form of a command line tool run the script bellow.
+
+Remember to make sure maven is installed and that you have build the application.
 
 ```
-java -jar App.java market.csv 1500
+./quote-loan.sh marketData.csv 1000
 ```
 
 ### The Solution

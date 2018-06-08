@@ -38,6 +38,7 @@ public class DataReader {
 
         } catch (Exception e) {
             System.err.println(format("Unable to read file: '%s'", fileName));
+            System.err.println(format("Exception caught: %s, message: %s", e.getClass().toString(), e.getMessage()));
             return new ArrayList<>();
         }
 

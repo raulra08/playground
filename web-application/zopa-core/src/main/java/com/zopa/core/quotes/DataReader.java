@@ -2,9 +2,12 @@ package com.zopa.core.quotes;
 
 import com.zopa.core.quotes.model.Lender;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.util.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static java.lang.String.format;
 
@@ -15,23 +18,23 @@ public class DataReader {
 
     public static List<Lender> readData(String fileName) {
 
-        String line;
         String splitByComma = ",";
-        List<Lender> lenderList = new ArrayList<>();
+        List<Lender> lenderList;
 
-        try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
-            // skip head line
-            br.readLine();
-            while ((line = br.readLine()) != null) {
-                // use comma as separator
-                String[] country = line.split(splitByComma);
+        try (Stream<String> stream = Files.lines(Paths.get(fileName))) {
 
-                String name = country[0];
-                Double rate = Double.valueOf(country[1]);
-                Double available = Double.valueOf(country[2]);
+            lenderList = stream
+                    .filter(line -> !line.startsWith("Lender"))
+                    .map(line -> {
+                        String[] country = line.split(splitByComma);
 
-                lenderList.add(new Lender(name, rate, available));
-            }
+                        String name = country[0];
+                        Double rate = Double.valueOf(country[1]);
+                        Double available = Double.valueOf(country[2]);
+
+                        return new Lender(name, rate, available);
+                    })
+                    .collect(Collectors.toList());
 
         } catch (Exception e) {
             System.err.println(format("Unable to read file: '%s'", fileName));

@@ -8,32 +8,47 @@ import static org.junit.Assert.assertTrue;
 public class AppTest {
 
     @Test
-    public void shouldReturnTrueWithValidInput() {
-        assertTrue(App.validateInput(1000));
+    public void shouldReturnTrueWithValidAmountValue() {
+        assertTrue(App.validAmountValue(1000));
     }
 
     @Test
-    public void shouldReturnTrueWithStepOf100Input() {
-        assertTrue(App.validateInput(1100));
+    public void shouldReturnTrueWithStepOf100AmountValue() {
+        assertTrue(App.validAmountValue(1100));
     }
 
     @Test
     public void shouldReturnFalseWithInvalidStep() {
-        assertFalse(App.validateInput(1101));
+        assertFalse(App.validAmountValue(1101));
     }
 
     @Test
-    public void shouldReturnFalseWithSmallInput() {
-        assertFalse(App.validateInput(900));
+    public void shouldReturnFalseWithSmallAmountValue() {
+        assertFalse(App.validAmountValue(900));
     }
 
     @Test
-    public void shouldReturnTrueWithMaxInput() {
-        assertTrue(App.validateInput(1500));
+    public void shouldReturnTrueWithMaxAmountValue() {
+        assertTrue(App.validAmountValue(1500));
     }
 
     @Test
-    public void shouldReturnFalseWithBigInput() {
-        assertFalse(App.validateInput(9000));
+    public void shouldReturnFalseWithBigAmountValue() {
+        assertFalse(App.validAmountValue(9000));
+    }
+
+    @Test
+    public void shouldReturnFalseWhenInputIsValid() {
+        assertFalse(App.invalidInput("fileName", "0"));
+    }
+
+    @Test
+    public void shouldReturnTrueWithInvalidFileNameInput() {
+        assertTrue(App.invalidInput("", "0"));
+    }
+
+    @Test
+    public void shouldReturnTrueWithInvalidAmountInput() {
+        assertTrue(App.invalidInput("fileName", null));
     }
 }

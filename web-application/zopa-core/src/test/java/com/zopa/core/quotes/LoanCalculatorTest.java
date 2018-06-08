@@ -5,30 +5,28 @@ import com.zopa.core.quotes.model.Loan;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
 
 public class LoanCalculatorTest {
 
-    private LoanCalculator loanCalculator;
     private List<Lender> lenders;
 
     @Before
     public void setUp() {
-        loanCalculator = new LoanCalculator();
         lenders = lendersMock();
     }
 
     @Test
-     public void shouldComputeLoanQuote() {
-        Loan loan = loanCalculator.calculateLoan(1000.0, lenders);
+     public void shouldCalculateLoanWithPrincipalAndLenders() {
+        Optional<Loan> maybeLoan = LoanCalculator.calculateLoan(1000.0, lenders);
 
         Double repaymentAmount = Double.valueOf(1017.8552279577544);
 
-        assertEquals(repaymentAmount, loan.getTotalRepayment());
+        assertEquals(repaymentAmount, maybeLoan.get().getTotalRepayment());
     }
 
     private List<Lender>  lendersMock() {

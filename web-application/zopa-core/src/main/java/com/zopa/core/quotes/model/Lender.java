@@ -23,9 +23,4 @@ public class Lender {
     public Double getAvailable() {
         return available;
     }
-
-    @Override
-    public String toString() {
-        return String.format("\"%s\", \"%s\", \"%s\"", this.name, this.rate.toString(), this.available.toString());
-    }
 }

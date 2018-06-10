@@ -28,9 +28,9 @@ public class QuoteIllustrator {
 
     private static String printQuote(final Double requiredAmount, final Loan loan) {
         Double rate = loan.getRate() * HUNDRED_PERCENT;
-        return format("Requested amount: £%.0f " +
-                        "\nRate: %.1f%% " +
-                        "\nMonthly repayment: £%.2f " +
+        return format("Requested amount: £%.0f" +
+                        "\nRate: %.1f%%" +
+                        "\nMonthly repayment: £%.2f" +
                         "\nTotal repayment: £%.2f",
                 requiredAmount,
                 rate,

@@ -15,7 +15,7 @@ public class App {
         String illustration;
 
         if (invalidInput(args) || !validAmountValue(Integer.parseInt(args[1]))) {
-            illustration = getRunErrorMessage();
+            illustration = getInputErrorMessage();
         } else {
             illustration = QuoteIllustrator.illustrateQuote(args[0], Double.valueOf(args[1]));
         }
@@ -43,8 +43,9 @@ public class App {
         return (loanAmount % STEP == 0);
     }
 
-    private static String getRunErrorMessage() {
-        return format("Expected input: <market_data_file> <loan_amount>\n" +
-                "verify <loan_amount> is withing £1000 and £1500\n");
+    private static String getInputErrorMessage() {
+        return "The data entered is incorrect \n " +
+                "The expect input to this application follows the format: <market_data_file> <loan_amount>\n" +
+                "Verify that <loan_amount> is within £1000 and £1500, with increment steps of £100\n";
     }
 }

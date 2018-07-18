@@ -8,4 +8,4 @@ dependency-reduced-pom.xml
 # dependencies
 web-application/front-end/node_modules/
 
-web-application/front-end/.DS_Store
+**/.DS_Store

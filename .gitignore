@@ -9,3 +9,4 @@ dependency-reduced-pom.xml
 web-application/front-end/node_modules/
 
 **/.DS_Store
+**/.vscode/
